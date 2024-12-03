@@ -16,8 +16,35 @@
   <div id="escape-overlay" class="overlay">
     <div class="overlay-content">
       <p>Are you sure you want to go back to the main menu?</p>
-      <button id="confirm-back" class="overlay-button">Confirm</button>
+      <button id="confirm-back" class="overlay-button" onclick="returnToMainMenu()">Confirm</button>
       <button id="cancel-back" class="overlay-button">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Custom Alert Modal for Game Over -->
+  <div id="custom-alert" class="custom-alert">
+    <div class="alert-content">
+      <p id="alert-message">Game Over! You left the maze area.</p>
+      <button id="alert-restart" class="alert-button">Restart Level</button>
+      <button id="alert-mainmenu" class="alert-button" onclick="returnToMainMenu()">Return to Main Menu</button>
+    </div>
+  </div>
+
+  <!-- Custom Alert Modal for Completing Maze -->
+  <div id="completed-alert" class="custom-alert">
+    <div class="alert-content">
+      <p>Congratulations! You've completed the maze.</p>
+      <button id="next-level" class="alert-button">Next Level</button>
+      <button id="alert-mainmenu-complete" class="alert-button" onclick="returnToMainMenu()">Return to Main Menu</button>
+    </div>
+  </div>
+
+  <!-- Custom Alert Modal for Leaving the Page -->
+  <div id="leave-page-alert" class="custom-alert">
+    <div class="alert-content">
+      <p>Please stay on the page while playing the game.</p>
+      <button id="leave-alert-restart" class="alert-button">Restart Level</button>
+      <button id="leave-alert-mainmenu" class="alert-button" onclick="returnToMainMenu()">Return to Main Menu</button>
     </div>
   </div>
 

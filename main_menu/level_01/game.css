@@ -22,8 +22,8 @@ body {
   text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
 }
 
-/* Overlay Styling */
-.overlay {
+/* Custom Alert Box Styling */
+.custom-alert, .overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -34,10 +34,10 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  z-index: 1000; /* Ensure it's above other elements */
+  z-index: 1000; /* Ensure it sits above all other elements */
 }
 
-.overlay-content {
+.alert-content, .overlay-content {
   background-color: #333;
   border-radius: 10px;
   padding: 30px;
@@ -46,7 +46,7 @@ body {
   font-size: 18px;
 }
 
-.overlay-button {
+.alert-button, .overlay-button {
   background-color: #444;
   color: #fff;
   font-size: 18px;
@@ -59,7 +59,7 @@ body {
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.overlay-button:hover {
+.alert-button:hover, .overlay-button:hover {
   background-color: #00ff00;
   color: #222;
   transform: scale(1.1);
