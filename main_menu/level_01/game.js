@@ -40,5 +40,40 @@ function placeStartAndEnd() {
   end.style.top = `${endY}px`;
 }
 
+// Timer logic
+let startTime = Date.now();
+const timerElement = document.getElementById("timer");
+
+function updateTimer() {
+  const elapsed = (Date.now() - startTime) / 1000; // Time in seconds
+  timerElement.textContent = `Time: ${elapsed.toFixed(2)}s`;
+  requestAnimationFrame(updateTimer); // Keeps updating the timer
+}
+
+// Event listener for Escape key to show confirmation overlay
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") {
+    // Show the overlay
+    const overlay = document.getElementById("escape-overlay");
+    overlay.style.display = "flex"; // Display the overlay
+  }
+});
+
+// Handling the confirmation buttons
+const confirmBack = document.getElementById("confirm-back");
+const cancelBack = document.getElementById("cancel-back");
+
+confirmBack.addEventListener("click", () => {
+  window.location.href = "https://kadensaltz.github.io/Maze_game/main_menu/index.html"; // Redirect to main menu
+});
+
+cancelBack.addEventListener("click", () => {
+  const overlay = document.getElementById("escape-overlay");
+  overlay.style.display = "none"; // Close the overlay
+});
+
+// Start the timer
+updateTimer();
+
 // Call the function to place the start and end elements
 placeStartAndEnd();

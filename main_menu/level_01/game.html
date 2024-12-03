@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="game.css">
+  <script src="game.js" defer></script>
+  <title>Maze Game</title>
+</head>
+<body>
+
+  <!-- Timer -->
+  <div id="timer" class="timer">Time: 0.00s</div>
+
+  <!-- Overlay for Escape Confirmation -->
+  <div id="escape-overlay" class="overlay">
+    <div class="overlay-content">
+      <p>Are you sure you want to go back to the main menu?</p>
+      <button id="confirm-back" class="overlay-button">Confirm</button>
+      <button id="cancel-back" class="overlay-button">Cancel</button>
+    </div>
+  </div>
+
+  <div class="maze-container" id="maze">
+    <!-- Start and End points -->
+    <div class="start">S</div>
+    <div class="end">E</div>
+
+    <!-- Maze Walls -->
+    <div class="wall wall-1"></div>
+    <div class="wall wall-2"></div>
+    <div class="wall wall-3"></div>
+  </div>
+
+</body>
+</html>
