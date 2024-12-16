@@ -125,26 +125,54 @@ alertRestart.addEventListener("click", () => {
 alertMainMenu.addEventListener("click", returnToMainMenu);
 
 // Handling the leave-page alert buttons (Restart Level or Return to Main Menu)
+const leavePageAlert = document.getElementById("leave-page-alert");
 const leaveAlertRestart = document.getElementById("leave-alert-restart");
 const leaveAlertMainMenu = document.getElementById("leave-alert-mainmenu");
 
-leaveAlertRestart.addEventListener("click", () => {
-  const leavePageAlert = document.getElementById("leave-page-alert");
+// Function to show the leave-page alert
+function showLeavePageAlert() {
+  leavePageAlert.style.display = "block";
+}
+
+function restartLevel() {
   leavePageAlert.style.display = "none"; // Close the leave-page alert
   startTime = Date.now(); // Reset the start time when the level is restarted
   resumeTimer(); // Start/resume the timer
   placeStartAndEnd(); // Reset the maze
+}
+
+// Event listeners for the buttons
+leaveAlertRestart.addEventListener("click", restartLevel);
+leaveAlertMainMenu.addEventListener("click", returnToMainMenu);
+
+// Page Visibility Detection
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    showLeavePageAlert(); // Trigger the alert when the page is not visible
+    pauseTimer(); // Pause the timer when the alert is displayed
+  }
 });
 
-leaveAlertMainMenu.addEventListener("click", returnToMainMenu);
+// Window Focus Detection
+window.addEventListener("blur", () => {
+  showLeavePageAlert(); // Trigger the alert when the window loses focus
+  pauseTimer(); // Pause the timer when the alert is displayed
+});
+
+// Prevent closing the alert when the user refocuses
+window.addEventListener("focus", () => {
+  if (leavePageAlert.style.display === "block") {
+    pauseTimer(); // Ensure the timer stays paused until the user interacts with the modal
+  }
+});
 
 // Handling the completed alert buttons (Next Level or Return to Main Menu)
 const nextLevelButton = document.getElementById("next-level");
 const alertMainMenuComplete = document.getElementById("alert-mainmenu-complete");
 
-nextLevelButton.addEventListener("click", () => {
-  window.location.href = "game2.html"; // Redirect to next level (game2.html)
-});
+// nextLevelButton.addEventListener("click", () => {
+//   window.location.href = "game2.html"; // Redirect to next level (game2.html)
+// });
 
 alertMainMenuComplete.addEventListener("click", returnToMainMenu);
 
@@ -167,3 +195,28 @@ maze.addEventListener("mouseout", (event) => {
     showCustomAlert("Game Over! You left the maze area.");
   }
 });
+
+// Function to detect a right-click and display the custom alert
+document.addEventListener('contextmenu', function(event) {
+  event.preventDefault(); // Prevent the default right-click menu
+  const rightClickAlert = document.getElementById('right-click-alert');
+  if (rightClickAlert) {
+    rightClickAlert.style.display = 'flex'; // Show the custom alert
+  }
+});
+
+// Handling the right-click alert buttons
+const rightClickRestart = document.getElementById('right-click-restart');
+const rightClickMainMenu = document.getElementById('right-click-mainmenu');
+
+if (rightClickRestart) {
+  rightClickRestart.addEventListener('click', () => {
+    const rightClickAlert = document.getElementById('right-click-alert');
+    rightClickAlert.style.display = 'none'; // Hide the custom alert
+    loadLevel(currentLevelIndex); // Restart the current level
+  });
+}
+
+if (rightClickMainMenu) {
+  rightClickMainMenu.addEventListener('click', returnToMainMenu);
+}

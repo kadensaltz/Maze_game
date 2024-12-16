@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <!-- Custom Alert Modal for Game Over -->
+  <!-- Custom Alert Modal for leaving maze area -->
   <div id="custom-alert" class="custom-alert">
     <div class="alert-content">
       <p id="alert-message">Game Over! You left the maze area.</p>
@@ -30,7 +30,7 @@
     </div>
   </div>
 
-  <!-- Custom Alert Modal for Completing Maze -->
+  <!-- Custom Alert Modal for completing Maze -->
   <div id="completed-alert" class="custom-alert">
     <div class="alert-content">
       <p>Congratulations! You've completed the maze.</p>
@@ -39,7 +39,7 @@
     </div>
   </div>
 
-  <!-- Custom Alert Modal for Leaving the Page -->
+  <!-- Custom Alert Modal for leaving the page -->
   <div id="leave-page-alert" class="custom-alert">
     <div class="alert-content">
       <p>Please stay on the page while playing the game.</p>
@@ -47,6 +47,15 @@
       <button id="leave-alert-mainmenu" class="alert-button" onclick="returnToMainMenu()">Return to Main Menu</button>
     </div>
   </div>
+
+<!-- Custom Alert Modal for Right Click -->
+<div id="right-click-alert" class="custom-alert">
+  <div class="alert-content">
+    <p>Right-clicking is disabled during the game.</p>
+    <button id="right-click-restart" class="alert-button">Restart Level</button>
+    <button id="right-click-mainmenu" class="alert-button" onclick="returnToMainMenu()">Return to Main Menu</button>
+  </div>
+</div>
 
   <div class="maze-container" id="maze">
     <!-- Start and End points -->
