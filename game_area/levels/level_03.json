@@ -1,0 +1,15 @@
+{
+  "start": {"x": 8, "y": 12},
+  "end": {"x": 90, "y": 88},
+  "walls": [
+    {"x": 5, "y": 5, "width": 90, "height": 3},
+    {"x": 5, "y": 5, "width": 3, "height": 30},
+    {"x": 5, "y": 32, "width": 70, "height": 3},
+    {"x": 72, "y": 32, "width": 3, "height": 30},
+    {"x": 20, "y": 59, "width": 55, "height": 3},
+    {"x": 20, "y": 59, "width": 3, "height": 30},
+    {"x": 5, "y": 92, "width": 90, "height": 3},
+    {"x": 92, "y": 5, "width": 3, "height": 90},
+    {"x": 20, "y": 89, "width": 70, "height": 3}
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "start": {"x": 20, "y": 20},
+  "end": {"x": 80, "y": 80},
+  "walls": [
+    {"x": 10, "y": 10, "width": 80, "height": 3},
+    {"x": 10, "y": 87, "width": 80, "height": 3},
+    {"x": 10, "y": 10, "width": 3, "height": 80},
+    {"x": 87, "y": 10, "width": 3, "height": 80},
+    {"x": 10, "y": 30, "width": 60, "height": 3},
+    {"x": 30, "y": 10, "width": 3, "height": 40},
+    {"x": 25, "y": 50, "width": 65, "height": 3},
+    {"x": 70, "y": 30, "width": 3, "height": 23},
+    {"x": 50, "y": 65, "width": 40, "height": 3},
+    {"x": 50, "y": 50, "width": 3, "height": 15},
+    {"x": 10, "y": 70, "width": 43, "height": 3},
+    {"x": 30, "y": 65, "width": 3, "height": 10}
+  ]
+}
