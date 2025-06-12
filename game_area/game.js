@@ -377,15 +377,6 @@ if (cancelUsernameButton && usernamePromptOverlay && usernameInput) { // Ensure 
 
 const urlParams = new URLSearchParams(window.location.search);
 const levelFromUrl = parseInt(urlParams.get('level'));
-  } else {
-    console.error("Attempted to start level without fetched data.");
-    // Optionally, try to load default level or show error
-    loadLevel(1); // Fallback or show error message
-  }
-});
-
-const urlParams = new URLSearchParams(window.location.search);
-const levelFromUrl = parseInt(urlParams.get('level'));
 
 if (levelFromUrl && levelFromUrl >= 1 && levelFromUrl <= 10) { // Assuming 10 levels
   loadLevel(levelFromUrl);
