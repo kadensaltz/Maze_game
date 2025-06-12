@@ -16,17 +16,17 @@
   <div id="escape-overlay" class="overlay">
     <div class="overlay-content">
       <p>Are you sure you want to go back to the main menu?</p>
-      <button id="confirm-back" class="overlay-button" onclick="returnToMainMenu()">Confirm</button>
+      <button id="confirm-back" class="overlay-button">Confirm</button>
       <button id="cancel-back" class="overlay-button">Cancel</button>
     </div>
   </div>
 
-  <!-- Game-Over / Wall Collision Alert -->
+  <!-- Game-Over Alert -->
   <div id="custom-alert" class="custom-alert">
     <div class="alert-content">
       <p id="alert-message">Game Over! You touched a wall.</p>
       <button id="alert-restart" class="alert-button">Restart Level</button>
-      <button id="alert-mainmenu" class="alert-button" onclick="returnToMainMenu()">Return to Main Menu</button>
+      <button id="alert-mainmenu" class="alert-button">Return to Main Menu</button>
     </div>
   </div>
 
@@ -35,7 +35,7 @@
     <div class="alert-content">
       <p>Congratulations! You've completed the maze.</p>
       <button id="next-level" class="alert-button">Next Level</button>
-      <button id="alert-mainmenu-complete" class="alert-button" onclick="returnToMainMenu()">Return to Main Menu</button>
+      <button id="alert-mainmenu-complete" class="alert-button">Return to Main Menu</button>
     </div>
   </div>
 
@@ -44,7 +44,7 @@
     <div class="alert-content">
       <p>Please stay on the page while playing the game.</p>
       <button id="leave-alert-restart" class="alert-button">Restart Level</button>
-      <button id="leave-alert-mainmenu" class="alert-button" onclick="returnToMainMenu()">Return to Main Menu</button>
+      <button id="leave-alert-mainmenu" class="alert-button">Return to Main Menu</button>
     </div>
   </div>
 
@@ -53,14 +53,14 @@
     <div class="alert-content">
       <p>Right-clicking is disabled during the game.</p>
       <button id="right-click-restart" class="alert-button">Restart Level</button>
-      <button id="right-click-mainmenu" class="alert-button" onclick="returnToMainMenu()">Return to Main Menu</button>
+      <button id="right-click-mainmenu" class="alert-button">Return to Main Menu</button>
     </div>
   </div>
 
-  <!-- Username Prompt on Completion -->
+  <!-- Username Prompt (only shown at final or on exit) -->
   <div id="username-prompt-overlay" class="overlay" style="display: none;">
     <div class="overlay-content">
-      <h2>Level Complete!</h2>
+      <h2>All Done!</h2>
       <p>Enter your name for the leaderboard:</p>
       <input type="text" id="username-input" class="overlay-input" placeholder="Your Name">
       <button id="submit-username-button" class="overlay-button">Submit Score</button>
@@ -68,7 +68,7 @@
     </div>
   </div>
 
-  <!-- Maze -->
+  <!-- The Maze -->
   <div class="maze-container" id="maze">
     <div class="start"></div>
     <div class="end"></div>
