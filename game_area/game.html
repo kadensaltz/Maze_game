@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="game.css">
-  <link rel="icon" type="image/webp" href="../main_menu/mazegamelogo.webp">
+  <link rel="icon" type="image/webp" href="/main_menu/mazegamelogo.webp">
   <title>Maze Game</title>
 </head>
 <body>
@@ -12,7 +12,7 @@
   <!-- Timer -->
   <div id="timer" class="timer">Time: 0.00s</div>
 
-  <!-- Overlay for Escape Confirmation -->
+  <!-- Escape Confirmation Overlay -->
   <div id="escape-overlay" class="overlay">
     <div class="overlay-content">
       <p>Are you sure you want to go back to the main menu?</p>
@@ -21,16 +21,16 @@
     </div>
   </div>
 
-  <!-- Custom Alert Modal for leaving maze area -->
+  <!-- Game-Over / Wall Collision Alert -->
   <div id="custom-alert" class="custom-alert">
     <div class="alert-content">
-      <p id="alert-message">Game Over! You left the maze area.</p>
+      <p id="alert-message">Game Over! You touched a wall.</p>
       <button id="alert-restart" class="alert-button">Restart Level</button>
       <button id="alert-mainmenu" class="alert-button" onclick="returnToMainMenu()">Return to Main Menu</button>
     </div>
   </div>
 
-  <!-- Custom Alert Modal for completing Maze -->
+  <!-- Completed-Level Alert -->
   <div id="completed-alert" class="custom-alert">
     <div class="alert-content">
       <p>Congratulations! You've completed the maze.</p>
@@ -39,7 +39,7 @@
     </div>
   </div>
 
-  <!-- Custom Alert Modal for leaving the page -->
+  <!-- Leave-Page Alert -->
   <div id="leave-page-alert" class="custom-alert">
     <div class="alert-content">
       <p>Please stay on the page while playing the game.</p>
@@ -48,22 +48,16 @@
     </div>
   </div>
 
-<!-- Custom Alert Modal for Right Click -->
-<div id="right-click-alert" class="custom-alert">
-  <div class="alert-content">
-    <p>Right-clicking is disabled during the game.</p>
-    <button id="right-click-restart" class="alert-button">Restart Level</button>
-    <button id="right-click-mainmenu" class="alert-button" onclick="returnToMainMenu()">Return to Main Menu</button>
-  </div>
-</div>
-
-  <div id="start-overlay" class="overlay" style="display: none;">
-    <div class="overlay-content">
-      <h2>Get Ready!</h2>
-      <p>Position your mouse over the 'START' block to begin.</p>
+  <!-- Right-Click Disabled Alert -->
+  <div id="right-click-alert" class="custom-alert">
+    <div class="alert-content">
+      <p>Right-clicking is disabled during the game.</p>
+      <button id="right-click-restart" class="alert-button">Restart Level</button>
+      <button id="right-click-mainmenu" class="alert-button" onclick="returnToMainMenu()">Return to Main Menu</button>
     </div>
   </div>
 
+  <!-- Username Prompt on Completion -->
   <div id="username-prompt-overlay" class="overlay" style="display: none;">
     <div class="overlay-content">
       <h2>Level Complete!</h2>
@@ -74,15 +68,10 @@
     </div>
   </div>
 
+  <!-- Maze -->
   <div class="maze-container" id="maze">
-    <!-- Start and End points -->
-    <div class="start">S</div>
-    <div class="end">E</div>
-
-    <!-- Maze Walls -->
-    <div class="wall wall-1"></div>
-    <div class="wall wall-2"></div>
-    <div class="wall wall-3"></div>
+    <div class="start"></div>
+    <div class="end"></div>
   </div>
 
   <script src="game.js" defer></script>
