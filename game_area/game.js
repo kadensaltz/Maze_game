@@ -3,45 +3,8 @@ function returnToMainMenu() {
   window.location.href = "https://kadensaltz.github.io/Maze_game/main_menu/index.html";
 }
 
-// Detect collision with walls
-const maze = document.getElementById("maze");
-const walls = document.querySelectorAll(".wall");
-
-// Event listener for mouse over walls
-walls.forEach(wall => {
-  wall.addEventListener("mouseenter", () => {
-    showCustomAlert("Game Over! You touched a wall.");
-  });
-});
-
-// Detect reaching the end
-const end = document.querySelector(".end");
-end.addEventListener("mouseenter", () => {
-  showCompletedAlert();  // Show the "completed maze" alert when the player reaches the end
-});
-
-// Function to randomly place the start and end elements
-function placeStartAndEnd() {
-  const start = document.querySelector(".start");
-  const end = document.querySelector(".end");
-
-  const mazeRect = maze.getBoundingClientRect();
-  const mazeWidth = mazeRect.width;
-  const mazeHeight = mazeRect.height;
-
-  const startX = Math.random() * (mazeWidth - start.offsetWidth);
-  const startY = Math.random() * (mazeHeight - start.offsetHeight);
-  const endX = Math.random() * (mazeWidth - end.offsetWidth);
-  const endY = Math.random() * (mazeHeight - end.offsetHeight);
-
-  start.style.position = "absolute";
-  start.style.left = `${startX}px`;
-  start.style.top = `${startY}px`;
-
-  end.style.position = "absolute";
-  end.style.left = `${endX}px`;
-  end.style.top = `${endY}px`;
-}
+let currentLevelNumber = 1;
+const maze = document.getElementById("maze"); // Maze container
 
 // Timer logic
 let startTime = Date.now(); // Start time will be reset when the game restarts
@@ -76,7 +39,7 @@ function showCompletedAlert() {
   if (playerName) {
     let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
     const time = parseFloat(timerElement.textContent.replace('Time: ', '').replace('s', ''));
-    leaderboard.push({ name: playerName, time: time, level: 1 });
+    leaderboard.push({ name: playerName, time: time, level: currentLevelNumber });
     localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
   }
 }
@@ -125,9 +88,9 @@ const alertMainMenu = document.getElementById("alert-mainmenu");
 alertRestart.addEventListener("click", () => {
   const customAlert = document.getElementById("custom-alert");
   customAlert.style.display = "none"; // Close the custom alert
-  startTime = Date.now(); // Reset the start time when the level is restarted
-  resumeTimer(); // Start/resume the timer
-  placeStartAndEnd(); // Reset the maze
+  // startTime = Date.now(); // Reset by loadLevel
+  // resumeTimer(); // Called by loadLevel
+  loadLevel(currentLevelNumber); // Reload current level
 });
 
 alertMainMenu.addEventListener("click", returnToMainMenu);
@@ -144,9 +107,9 @@ function showLeavePageAlert() {
 
 function restartLevel() {
   leavePageAlert.style.display = "none"; // Close the leave-page alert
-  startTime = Date.now(); // Reset the start time when the level is restarted
-  resumeTimer(); // Start/resume the timer
-  placeStartAndEnd(); // Reset the maze
+  // startTime = Date.now(); // Reset by loadLevel
+  // resumeTimer(); // Called by loadLevel
+  loadLevel(currentLevelNumber); // Reload current level
 }
 
 // Event listeners for the buttons
@@ -178,17 +141,110 @@ window.addEventListener("focus", () => {
 const nextLevelButton = document.getElementById("next-level");
 const alertMainMenuComplete = document.getElementById("alert-mainmenu-complete");
 
-// nextLevelButton.addEventListener("click", () => {
-//   window.location.href = "game2.html"; // Redirect to next level (game2.html)
-// });
+nextLevelButton.addEventListener("click", () => {
+  currentLevelNumber++;
+  if (currentLevelNumber > 10) { // Assuming 10 levels for now
+    alert("Congratulations! You've completed all levels!");
+    // Optionally, clear leaderboard prompt related elements if any are visible
+    document.getElementById("completed-alert").style.display = "none";
+    returnToMainMenu(); // Or redirect to leaderboard
+  } else {
+    loadLevel(currentLevelNumber);
+    document.getElementById("completed-alert").style.display = "none"; // Hide the alert
+  }
+});
 
 alertMainMenuComplete.addEventListener("click", returnToMainMenu);
+
+// Function to load and render a level
+async function loadLevel(levelNumber) {
+  currentLevelNumber = levelNumber;
+  const levelFile = `levels/level_${String(levelNumber).padStart(2, '0')}.json`;
+
+  try {
+    const response = await fetch(levelFile);
+    if (!response.ok) {
+      throw new Error(`Could not load level ${levelNumber}: ${response.statusText}`);
+    }
+    const levelData = await response.json();
+
+    // Clear existing maze elements (walls)
+    const existingWalls = maze.querySelectorAll(".wall");
+    existingWalls.forEach(wall => wall.remove());
+
+    // Render Walls
+    levelData.walls.forEach(wallData => {
+      const wallElement = document.createElement('div');
+      wallElement.classList.add('wall');
+      wallElement.style.position = 'absolute';
+      wallElement.style.left = wallData.x + '%';
+      wallElement.style.top = wallData.y + '%';
+      wallElement.style.width = wallData.width + '%';
+      wallElement.style.height = wallData.height + '%';
+      wallElement.style.backgroundColor = 'blue'; // Or use CSS for wall styling
+      maze.appendChild(wallElement);
+      wallElement.addEventListener("mouseenter", () => {
+        // Ensure showCustomAlert is accessible
+        showCustomAlert("Game Over! You touched a wall.");
+      });
+    });
+
+    // Render Start
+    let startElement = document.querySelector(".start");
+    if (!startElement) { // Should exist from HTML, but as a fallback
+        startElement = document.createElement('div');
+        startElement.classList.add('start');
+        maze.appendChild(startElement);
+    }
+    startElement.style.position = 'absolute';
+    startElement.style.left = levelData.start.x + '%';
+    startElement.style.top = levelData.start.y + '%';
+    // Ensure 'S' or other content is visible if not using background image
+    startElement.textContent = 'S';
+
+
+    // Render End
+    let endElement = document.querySelector(".end");
+    if (!endElement) { // Should exist from HTML
+        endElement = document.createElement('div');
+        endElement.classList.add('end');
+        maze.appendChild(endElement);
+    }
+    endElement.style.position = 'absolute';
+    endElement.style.left = levelData.end.x + '%';
+    endElement.style.top = levelData.end.y + '%';
+    // Ensure 'E' or other content is visible
+    endElement.textContent = 'E';
+
+    // Remove old listener before adding a new one to prevent duplicates
+    const newEndElement = endElement.cloneNode(true);
+    endElement.parentNode.replaceChild(newEndElement, endElement);
+    newEndElement.addEventListener("mouseenter", showCompletedAlert);
+
+
+    // Reset timer
+    startTime = Date.now();
+    resumeTimer(); // Make sure timer is running
+
+  } catch (error) {
+    console.error("Error loading level:", error);
+    alert("Failed to load level data. Returning to main menu.");
+    returnToMainMenu();
+  }
+}
 
 // Start the timer
 updateTimer();
 
-// Call the function to place the start and end elements
-placeStartAndEnd();
+// Initial Load Logic
+const urlParams = new URLSearchParams(window.location.search);
+const levelFromUrl = parseInt(urlParams.get('level'));
+
+if (levelFromUrl && levelFromUrl >= 1 && levelFromUrl <= 10) { // Assuming 10 levels
+  loadLevel(levelFromUrl);
+} else {
+  loadLevel(1); // Default to level 1
+}
 
 // Add event listener for mouse leaving the maze container (border)
 maze.addEventListener("mouseout", (event) => {
@@ -221,7 +277,7 @@ if (rightClickRestart) {
   rightClickRestart.addEventListener('click', () => {
     const rightClickAlert = document.getElementById('right-click-alert');
     rightClickAlert.style.display = 'none'; // Hide the custom alert
-    loadLevel(currentLevelIndex); // Restart the current level
+    loadLevel(currentLevelNumber); // Restart the current level
   });
 }
 

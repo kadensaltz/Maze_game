@@ -1,0 +1,23 @@
+{
+  "start": {"x": 50, "y": 10},
+  "end": {"x": 50, "y": 90},
+  "walls": [
+    {"x": 45, "y": 5, "width": 3, "height": 20},
+    {"x": 52, "y": 5, "width": 3, "height": 20},
+    {"x": 45, "y": 5, "width": 10, "height": 3},
+    {"x": 30, "y": 22, "width": 40, "height": 3},
+    {"x": 30, "y": 22, "width": 3, "height": 15},
+    {"x": 67, "y": 22, "width": 3, "height": 15},
+    {"x": 15, "y": 37, "width": 70, "height": 3},
+    {"x": 15, "y": 37, "width": 3, "height": 20},
+    {"x": 82, "y": 37, "width": 3, "height": 20},
+    {"x": 15, "y": 57, "width": 20, "height": 3},
+    {"x": 65, "y": 57, "width": 20, "height": 3},
+    {"x": 32, "y": 57, "width": 3, "height": 20},
+    {"x": 62, "y": 57, "width": 3, "height": 20},
+    {"x": 32, "y": 77, "width": 33, "height": 3},
+    {"x": 45, "y": 80, "width": 3, "height": 10},
+    {"x": 52, "y": 80, "width": 3, "height": 10},
+    {"x": 45, "y": 92, "width": 10, "height": 3}
+  ]
+}
