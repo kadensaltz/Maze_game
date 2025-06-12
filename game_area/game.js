@@ -5,6 +5,7 @@ function returnToMainMenu() {
 
 let currentLevelNumber = 1;
 const maze = document.getElementById("maze"); // Maze container
+let currentFetchedLevelData = null; // To store fetched level data for finalizeLevelLoad
 
 // Timer logic
 let startTime = Date.now(); // Start time will be reset when the game restarts
@@ -31,17 +32,23 @@ function showCustomAlert(message) {
 
 // Show completed alert (when the maze is finished)
 function showCompletedAlert() {
-  const completedAlert = document.getElementById("completed-alert");
-  completedAlert.style.display = "flex"; // Show the completed alert
-  pauseTimer(); // Pause the timer when the alert is shown
+  pauseTimer(); // Pause timer immediately
 
-  const playerName = prompt("Congratulations! Enter your name for the leaderboard:");
-  if (playerName) {
-    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-    const time = parseFloat(timerElement.textContent.replace('Time: ', '').replace('s', ''));
-    leaderboard.push({ name: playerName, time: time, level: currentLevelNumber });
-    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-  }
+  // Hide other alerts/overlays just in case
+  // Ensure these elements exist before trying to change their style to prevent errors if HTML changes
+  const customAlert = document.getElementById('custom-alert');
+  if (customAlert) customAlert.style.display = 'none';
+
+  const escapeOverlay = document.getElementById('escape-overlay');
+  if (escapeOverlay) escapeOverlay.style.display = 'none';
+
+  // document.getElementById('start-overlay').style.display = 'none'; // Usually not needed here
+
+  // Clear previous username input
+  if(usernameInput) usernameInput.value = '';
+
+  if(usernamePromptOverlay) usernamePromptOverlay.style.display = 'flex'; // Show username prompt FIRST
+  // The original 'completed-alert' is now shown after this prompt is handled.
 }
 
 // Pause the timer
@@ -72,6 +79,12 @@ document.addEventListener("keydown", function(event) {
 // Handling the escape overlay buttons
 const confirmBack = document.getElementById("confirm-back");
 const cancelBack = document.getElementById("cancel-back");
+
+// Username Prompt Elements
+const usernamePromptOverlay = document.getElementById('username-prompt-overlay');
+const usernameInput = document.getElementById('username-input');
+const submitUsernameButton = document.getElementById('submit-username-button');
+const cancelUsernameButton = document.getElementById('cancel-username-button');
 
 confirmBack.addEventListener("click", returnToMainMenu);
 
@@ -156,7 +169,40 @@ nextLevelButton.addEventListener("click", () => {
 
 alertMainMenuComplete.addEventListener("click", returnToMainMenu);
 
-// Function to load and render a level
+// Function to finalize level loading (render walls, start timer)
+function finalizeLevelLoad(levelData) {
+  if (!levelData) {
+    console.error("No level data to finalize loading.");
+    returnToMainMenu(); // Or show an error
+    return;
+  }
+
+  // Clear existing maze elements (walls) - Should be done before new walls are added
+  const existingWalls = maze.querySelectorAll(".wall");
+  existingWalls.forEach(wall => wall.remove());
+
+  // Render Walls
+  levelData.walls.forEach(wallData => {
+    const wallElement = document.createElement('div');
+    wallElement.classList.add('wall');
+    wallElement.style.position = 'absolute';
+    wallElement.style.left = wallData.x + '%';
+    wallElement.style.top = wallData.y + '%';
+    wallElement.style.width = wallData.width + '%';
+    wallElement.style.height = wallData.height + '%';
+    wallElement.style.backgroundColor = 'blue'; // Or use CSS for wall styling
+    maze.appendChild(wallElement);
+    wallElement.addEventListener("mouseenter", () => {
+      showCustomAlert("Game Over! You touched a wall.");
+    });
+  });
+
+  // Reset timer and start it
+  startTime = Date.now();
+  resumeTimer(); // Make sure timer is running
+}
+
+// Function to load level data and prepare for starting
 async function loadLevel(levelNumber) {
   currentLevelNumber = levelNumber;
   const levelFile = `levels/level_${String(levelNumber).padStart(2, '0')}.json`;
@@ -167,29 +213,14 @@ async function loadLevel(levelNumber) {
       throw new Error(`Could not load level ${levelNumber}: ${response.statusText}`);
     }
     const levelData = await response.json();
+    currentFetchedLevelData = levelData; // Store for finalizeLevelLoad
 
-    // Clear existing maze elements (walls)
-    const existingWalls = maze.querySelectorAll(".wall");
-    existingWalls.forEach(wall => wall.remove());
+    // Clear existing maze elements (walls) - Moved to finalizeLevelLoad, but ensure maze is clean before overlay
+    const wallsToClearBeforeOverlay = maze.querySelectorAll(".wall");
+    wallsToClearBeforeOverlay.forEach(wall => wall.remove());
 
-    // Render Walls
-    levelData.walls.forEach(wallData => {
-      const wallElement = document.createElement('div');
-      wallElement.classList.add('wall');
-      wallElement.style.position = 'absolute';
-      wallElement.style.left = wallData.x + '%';
-      wallElement.style.top = wallData.y + '%';
-      wallElement.style.width = wallData.width + '%';
-      wallElement.style.height = wallData.height + '%';
-      wallElement.style.backgroundColor = 'blue'; // Or use CSS for wall styling
-      maze.appendChild(wallElement);
-      wallElement.addEventListener("mouseenter", () => {
-        // Ensure showCustomAlert is accessible
-        showCustomAlert("Game Over! You touched a wall.");
-      });
-    });
 
-    // Render Start
+    // Position Start element
     let startElement = document.querySelector(".start");
     if (!startElement) { // Should exist from HTML, but as a fallback
         startElement = document.createElement('div');
@@ -199,11 +230,16 @@ async function loadLevel(levelNumber) {
     startElement.style.position = 'absolute';
     startElement.style.left = levelData.start.x + '%';
     startElement.style.top = levelData.start.y + '%';
-    // Ensure 'S' or other content is visible if not using background image
-    startElement.textContent = 'S';
+    startElement.textContent = 'START';
+    startElement.style.backgroundColor = 'blue';
+    startElement.style.color = 'white';
+    startElement.style.padding = '5px 10px';
+    startElement.style.textAlign = 'center';
+    startElement.style.width = 'auto';
+    startElement.style.height = 'auto';
 
 
-    // Render End
+    // Render End - Apply styles before cloning for event listener
     let endElement = document.querySelector(".end");
     if (!endElement) { // Should exist from HTML
         endElement = document.createElement('div');
@@ -213,21 +249,27 @@ async function loadLevel(levelNumber) {
     endElement.style.position = 'absolute';
     endElement.style.left = levelData.end.x + '%';
     endElement.style.top = levelData.end.y + '%';
-    // Ensure 'E' or other content is visible
-    endElement.textContent = 'E';
+    endElement.textContent = 'END';
+    endElement.style.backgroundColor = 'red';
+    endElement.style.color = 'white';
+    endElement.style.padding = '5px 10px';
+    endElement.style.textAlign = 'center';
+    endElement.style.width = 'auto';
+    endElement.style.height = 'auto';
 
-    // Remove old listener before adding a new one to prevent duplicates
+    // Remove old listener before adding a new one to prevent duplicates for end element
+    // Important: Clone the styled endElement
     const newEndElement = endElement.cloneNode(true);
     endElement.parentNode.replaceChild(newEndElement, endElement);
     newEndElement.addEventListener("mouseenter", showCompletedAlert);
 
-
-    // Reset timer
-    startTime = Date.now();
-    resumeTimer(); // Make sure timer is running
+    // Show the start overlay
+    document.getElementById('start-overlay').style.display = 'flex';
+    pauseTimer(); // Pause timer; it will be reset and started in finalizeLevelLoad
 
   } catch (error) {
     console.error("Error loading level:", error);
+    currentFetchedLevelData = null; // Clear data on error
     alert("Failed to load level data. Returning to main menu.");
     returnToMainMenu();
   }
@@ -237,6 +279,63 @@ async function loadLevel(levelNumber) {
 updateTimer();
 
 // Initial Load Logic
+const confirmStartButton = document.getElementById('confirm-start');
+const startOverlay = document.getElementById('start-overlay');
+
+if (confirmStartButton && startOverlay) { // Ensure elements exist
+  confirmStartButton.addEventListener('click', () => {
+    startOverlay.style.display = 'none';
+    if (currentFetchedLevelData) {
+      finalizeLevelLoad(currentFetchedLevelData);
+    } else {
+      console.error("Attempted to start level without fetched data.");
+      loadLevel(1); // Fallback or show error message
+    }
+  });
+}
+
+// Event listeners for the username prompt
+if (submitUsernameButton && usernamePromptOverlay && usernameInput) { // Ensure elements exist
+  submitUsernameButton.addEventListener('click', () => {
+    const playerName = usernameInput.value.trim();
+    if (playerName) {
+      // Logic moved from original showCompletedAlert:
+      let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+      const time = parseFloat(timerElement.textContent.replace('Time: ', '').replace('s', ''));
+      leaderboard.push({ name: playerName, time: time, level: currentLevelNumber });
+      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+
+      usernameInput.value = ''; // Clear input
+      usernamePromptOverlay.style.display = 'none';
+      // Show the original "completed-alert" again to offer "Next Level" or "Main Menu"
+      const completedAlert = document.getElementById('completed-alert');
+      if (completedAlert) completedAlert.style.display = 'flex';
+    } else {
+      // Optionally, show a small error message or just don't close the prompt
+      alert("Please enter a name!"); // Or a more styled error
+    }
+  });
+}
+
+if (cancelUsernameButton && usernamePromptOverlay && usernameInput) { // Ensure elements exist
+  cancelUsernameButton.addEventListener('click', () => {
+      usernameInput.value = ''; // Clear input
+      usernamePromptOverlay.style.display = 'none';
+      // Show the original "completed-alert" again to offer "Next Level" or "Main Menu"
+      const completedAlert = document.getElementById('completed-alert');
+      if (completedAlert) completedAlert.style.display = 'flex';
+  });
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const levelFromUrl = parseInt(urlParams.get('level'));
+  } else {
+    console.error("Attempted to start level without fetched data.");
+    // Optionally, try to load default level or show error
+    loadLevel(1); // Fallback or show error message
+  }
+});
+
 const urlParams = new URLSearchParams(window.location.search);
 const levelFromUrl = parseInt(urlParams.get('level'));
 
@@ -251,7 +350,7 @@ maze.addEventListener("mouseout", (event) => {
   // Check if mouse leaves the maze container
   const mazeRect = maze.getBoundingClientRect();
   if (
-    event.clientX < mazeRect.left || 
+    event.clientX < mazeRect.left ||
     event.clientX > mazeRect.right ||
     event.clientY < mazeRect.top ||
     event.clientY > mazeRect.bottom

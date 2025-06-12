@@ -56,6 +56,24 @@
   </div>
 </div>
 
+  <div id="start-overlay" class="overlay" style="display: none;">
+    <div class="overlay-content">
+      <h2>Get Ready!</h2>
+      <p>Position your mouse over the 'START' block.</p>
+      <button id="confirm-start" class="overlay-button">Click to Begin</button>
+    </div>
+  </div>
+
+  <div id="username-prompt-overlay" class="overlay" style="display: none;">
+    <div class="overlay-content">
+      <h2>Level Complete!</h2>
+      <p>Enter your name for the leaderboard:</p>
+      <input type="text" id="username-input" class="overlay-input" placeholder="Your Name">
+      <button id="submit-username-button" class="overlay-button">Submit Score</button>
+      <button id="cancel-username-button" class="overlay-button overlay-button-secondary">Skip</button>
+    </div>
+  </div>
+
   <div class="maze-container" id="maze">
     <!-- Start and End points -->
     <div class="start">S</div>

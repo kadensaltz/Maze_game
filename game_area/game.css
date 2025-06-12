@@ -80,15 +80,20 @@ body {
 
 /* Start and End points */
 .start, .end {
-  width: 20px;
-  height: 20px;
-  background-color: yellow;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
-  color: white;
+  /* width and height will be 'auto' due to padding, or set by JS if fixed size needed later */
+  /* background-color is now set by JavaScript */
+  /* color is now set by JavaScript */
+  /* display: flex; */ /* Not strictly needed if text-align and padding achieve centering */
+  /* justify-content: center; */ /* Not strictly needed */
+  /* align-items: center; */ /* Not strictly needed */
+  /* font-size: 16px; */ /* Can be kept or removed if JS sets it or default is fine */
+
+  position: absolute; /* Crucial for positioning */
   font-weight: bold;
+  border: 1px solid white; /* Optional: provides a small border */
+  box-sizing: border-box; /* Important for layout when padding is used */
+  /* text-align: center; is set by JS, but can be a default here too */
+  /* padding: 5px 10px; is set by JS */
 }
 
 /* Maze Wall Styling */
@@ -117,4 +122,118 @@ body {
   left: 100px;
   width: 400px;
   height: 20px;
+}
+
+#start-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+  display: flex; /* Use flexbox for centering */
+  justify-content: center;
+  align-items: center;
+  z-index: 100; /* Ensure it's on top */
+  color: white;
+  text-align: center;
+}
+
+/* Style for the content box within the overlay, similar to other alerts */
+#start-overlay .overlay-content {
+  background-color: #2c3e50; /* Dark blue-grey, adjust to theme */
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#start-overlay h2 {
+  margin-top: 0;
+  color: #f0ad4e; /* Orange, adjust to theme */
+}
+
+#start-overlay p {
+  margin-bottom: 20px;
+  font-size: 1.1em;
+}
+
+#confirm-start {
+  background-color: #5cb85c; /* Green, adjust to theme */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+}
+#confirm-start:hover {
+  background-color: #4cae4c; /* Darker green */
+}
+
+/* Username Prompt Overlay styling - similar to #start-overlay */
+#username-prompt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100; /* Ensure it's on top */
+  color: white;
+  text-align: center;
+}
+
+#username-prompt-overlay .overlay-content {
+  background-color: #2c3e50; /* Theme color */
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 350px; /* Or max-width */
+}
+
+#username-prompt-overlay h2 {
+  margin-top: 0;
+  color: #f0ad4e; /* Theme color */
+}
+
+#username-prompt-overlay p {
+  margin-bottom: 15px;
+}
+
+.overlay-input {
+  width: calc(100% - 20px); /* Full width minus padding */
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+/* #submit-username-button styling (can reuse .overlay-button if generic enough) */
+/* Or specific styles if needed */
+#username-prompt-overlay .overlay-button { /* General styling for buttons in this prompt */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin: 5px;
+}
+
+#submit-username-button {
+    background-color: #5cb85c; /* Green */
+}
+#submit-username-button:hover {
+    background-color: #4cae4c;
+}
+
+.overlay-button-secondary { /* For skip/cancel buttons */
+    background-color: #c9302c; /* Red / alternative color */
+}
+.overlay-button-secondary:hover {
+    background-color: #ac2925;
 }
