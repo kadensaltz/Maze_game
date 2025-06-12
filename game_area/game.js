@@ -43,9 +43,25 @@ btnSubmit.addEventListener("click", () => {
   if (!name) return alert("Please enter your name!");
   const secs = parseFloat(((totalTimeMs)/1000).toFixed(2));
   const board = JSON.parse(localStorage.getItem("leaderboard")||"[]");
-  board.push({ name, time: secs });
+  board.push({
+    name,
+    time: secs,
+    level: currentLevelNumber      // ← include the level they reached
+  });
   localStorage.setItem("leaderboard", JSON.stringify(board));
   goMainMenu();
+});
+
+//leaderboard rendering script
+const board = JSON.parse(localStorage.getItem("leaderboard")||"[]");
+board.forEach(entry => {
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td>${entry.name}</td>
+    <td>${entry.time.toFixed(2)}s</td>
+    <td>${entry.level}</td>
+  `;
+  document.querySelector("#leaderboard tbody").appendChild(row);
 });
 
 // Skip entering name
