@@ -71,6 +71,14 @@ function showCompletedAlert() {
   const completedAlert = document.getElementById("completed-alert");
   completedAlert.style.display = "flex"; // Show the completed alert
   pauseTimer(); // Pause the timer when the alert is shown
+
+  const playerName = prompt("Congratulations! Enter your name for the leaderboard:");
+  if (playerName) {
+    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    const time = parseFloat(timerElement.textContent.replace('Time: ', '').replace('s', ''));
+    leaderboard.push({ name: playerName, time: time, level: 1 });
+    localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+  }
 }
 
 // Pause the timer
