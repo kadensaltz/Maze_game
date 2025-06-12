@@ -238,6 +238,31 @@ async function loadLevel(levelNumber) {
     startElement.style.width = 'auto';
     startElement.style.height = 'auto';
 
+    // Add hover listener to start element for triggering game start
+    const startOverlay = document.getElementById('start-overlay'); // Ensure it's defined in this scope or globally
+
+    // If there's an old listener from a previous level, remove it
+    if (window.startHoverListener) {
+      startElement.removeEventListener('mouseenter', window.startHoverListener);
+    }
+
+    window.startHoverListener = () => {
+      if (startOverlay && startOverlay.style.display === 'flex') { // Only trigger if overlay is visible
+        startOverlay.style.display = 'none';
+        if (currentFetchedLevelData) {
+          finalizeLevelLoad(currentFetchedLevelData);
+        } else {
+          console.error("Error: Level data not found when trying to start by hover.");
+          // Optionally, redirect to main menu or show an error
+          returnToMainMenu();
+        }
+        // Important: Remove this specific listener after it has fired
+        startElement.removeEventListener('mouseenter', window.startHoverListener);
+        window.startHoverListener = null;
+      }
+    };
+    startElement.addEventListener('mouseenter', window.startHoverListener);
+
 
     // Render End - Apply styles before cloning for event listener
     let endElement = document.querySelector(".end");
@@ -279,14 +304,37 @@ async function loadLevel(levelNumber) {
 updateTimer();
 
 // Initial Load Logic
-const confirmStartButton = document.getElementById('confirm-start');
-const startOverlay = document.getElementById('start-overlay');
+// const confirmStartButton = document.getElementById('confirm-start'); // Button removed
+const startOverlay = document.getElementById('start-overlay'); // Still needed for hover logic if accessed directly
 
-if (confirmStartButton && startOverlay) { // Ensure elements exist
-  confirmStartButton.addEventListener('click', () => {
-    startOverlay.style.display = 'none';
-    if (currentFetchedLevelData) {
-      finalizeLevelLoad(currentFetchedLevelData);
+// if (confirmStartButton && startOverlay) { // Button listener removed
+//   confirmStartButton.addEventListener('click', () => {
+//     startOverlay.style.display = 'none';
+//     if (currentFetchedLevelData) {
+//       finalizeLevelLoad(currentFetchedLevelData);
+//     } else {
+//       console.error("Attempted to start level without fetched data.");
+//       loadLevel(1); // Fallback or show error message
+//     }
+//   });
+// }
+
+// Event listeners for the username prompt
+if (submitUsernameButton && usernamePromptOverlay && usernameInput) { // Ensure elements exist
+  submitUsernameButton.addEventListener('click', () => {
+    const playerName = usernameInput.value.trim();
+    if (playerName) {
+      // Logic moved from original showCompletedAlert:
+      let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+      const time = parseFloat(timerElement.textContent.replace('Time: ', '').replace('s', ''));
+      leaderboard.push({ name: playerName, time: time, level: currentLevelNumber });
+      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+
+      usernameInput.value = ''; // Clear input
+      usernamePromptOverlay.style.display = 'none';
+      // Show the original "completed-alert" again to offer "Next Level" or "Main Menu"
+      const completedAlert = document.getElementById('completed-alert');
+      if (completedAlert) completedAlert.style.display = 'flex';
     } else {
       console.error("Attempted to start level without fetched data.");
       loadLevel(1); // Fallback or show error message
