@@ -4,20 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="main_menu.css">
-  <link rel="icon" type="image/webp" href="mazegamelogo.webp">
   <title>Leaderboard - Maze Game</title>
 </head>
 <body>
   <div class="leaderboard-container">
     <h1 class="leaderboard-title">Leaderboard</h1>
 
+    <!-- View Selector -->
+    <div class="view-selector">
+      <label for="view-select">View:</label>
+      <select id="view-select">
+        <option value="full">Full Run Times</option>
+        <option value="level-1">Level 1 Fastest</option>
+        <option value="level-2">Level 2 Fastest</option>
+        <option value="level-3">Level 3 Fastest</option>
+        <option value="level-4">Level 4 Fastest</option>
+        <option value="level-5">Level 5 Fastest</option>
+        <option value="level-6">Level 6 Fastest</option>
+        <option value="level-7">Level 7 Fastest</option>
+        <option value="level-8">Level 8 Fastest</option>
+        <option value="level-9">Level 9 Fastest</option>
+        <option value="level-10">Level 10 Fastest</option>
+      </select>
+    </div>
+
     <!-- Leaderboard Table -->
     <div class="leaderboard-table">
       <div class="leaderboard-header">
         <div class="leaderboard-header-item">Name</div>
         <div class="leaderboard-header-item">Time</div>
-        <div class="leaderboard-header-item">Highest Level</div>
+        <div id="extra-header" class="leaderboard-header-item" style="display:none;">Level</div>
       </div>
+    </div>
 
     <!-- Back Button -->
     <a href="index.html">
@@ -26,34 +44,59 @@
   </div>
 
   <script>
-    const leaderboardTable = document.querySelector(".leaderboard-table");
-    let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+    const table     = document.querySelector('.leaderboard-table');
+    const selector  = document.getElementById('view-select');
+    const extraHead = document.getElementById('extra-header');
 
-    // Sort the data by time in ascending order
-    leaderboard.sort((a, b) => a.time - b.time);
+    function clearRows() {
+      document.querySelectorAll('.leaderboard-row').forEach(r => r.remove());
+    }
 
-    leaderboard.forEach(entry => {
-      const row = document.createElement('div');
-      row.classList.add('leaderboard-row'); // For styling if needed
+    function renderFullRun() {
+      clearRows();
+      extraHead.style.display = 'none';
+      let data = JSON.parse(localStorage.getItem('fullRunTimes') || '[]');
+      data.sort((a, b) => a.time - b.time);
+      data.forEach(e => {
+        const row = document.createElement('div');
+        row.classList.add('leaderboard-row');
+        const n = `<div class="leaderboard-item">${e.name}</div>`;
+        const t = `<div class="leaderboard-item">${e.time.toFixed(2)}s</div>`;
+        row.innerHTML = n + t;
+        table.appendChild(row);
+      });
+    }
 
-      const nameDiv = document.createElement('div');
-      nameDiv.classList.add('leaderboard-item'); // For styling if needed
-      nameDiv.textContent = entry.name;
+    function renderPerLevel(lvl) {
+      clearRows();
+      extraHead.style.display = 'block';
+      let all   = JSON.parse(localStorage.getItem('perLevelTimes') || '{}');
+      let data  = all[lvl] || [];
+      data.sort((a, b) => a.time - b.time);
+      data.forEach(e => {
+        const row = document.createElement('div');
+        row.classList.add('leaderboard-row');
+        const n = `<div class="leaderboard-item">${e.name}</div>`;
+        const t = `<div class="leaderboard-item">${e.time.toFixed(2)}s</div>`;
+        const l = `<div class="leaderboard-item">${lvl}</div>`;
+        row.innerHTML = n + t + l;
+        table.appendChild(row);
+      });
+    }
 
-      const timeDiv = document.createElement('div');
-      timeDiv.classList.add('leaderboard-item'); // For styling if needed
-      timeDiv.textContent = entry.time.toFixed(2) + 's'; // Format time
-
-      const levelDiv = document.createElement('div');
-      levelDiv.classList.add('leaderboard-item'); // For styling if needed
-      levelDiv.textContent = entry.level;
-
-      row.appendChild(nameDiv);
-      row.appendChild(timeDiv);
-      row.appendChild(levelDiv);
-
-      leaderboardTable.appendChild(row);
+    // On change
+    selector.addEventListener('change', () => {
+      const v = selector.value;
+      if (v === 'full') {
+        renderFullRun();
+      } else {
+        const lvl = v.split('-')[1];
+        renderPerLevel(lvl);
+      }
     });
+
+    // Initial load
+    renderFullRun();
   </script>
 </body>
 </html>

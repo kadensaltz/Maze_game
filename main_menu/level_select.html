@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="main_menu.css">
-  <link rel="icon" type="image/webp" href="mazegamelogo.webp">
   <title>Level Select - Maze Game</title>
 </head>
 <body>
@@ -30,5 +29,20 @@
       <button class="menu-button">Back to Main Menu</button>
     </a>
   </div>
+
+  <script>
+    // disable buttons beyond progression + 1
+    const maxUnlocked = parseInt(localStorage.getItem('maxUnlockedLevel') || '1', 10);
+    const allowed = maxUnlocked;
+    document.querySelectorAll('.level-buttons a').forEach(a => {
+      const btn = a.querySelector('button');
+      const lvl = parseInt(btn.textContent, 10);
+      if (lvl > allowed) {
+        btn.disabled = true;
+        btn.style.opacity = '0.4';
+        a.removeAttribute('href');
+      }
+    });
+  </script>
 </body>
 </html>
