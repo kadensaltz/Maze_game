@@ -106,15 +106,15 @@ body {
     font-style: italic;
   }
 
-  /* Leaderboard Styles */
+/* Leaderboard Styles */
 .leaderboard-container {
     background-color: #333;
     border-radius: 10px;
-    padding: 60px;
+    padding: 40px; /* Adjusted padding */
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
     width: 80%;
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: 800px; /* Can be adjusted */
+    margin: 20px auto; /* Added margin for centering container */
     text-align: center;
   }
   
@@ -124,46 +124,49 @@ body {
     margin-bottom: 20px;
     text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
   }
+
+/* Leaderboard Table Styling */
+.leaderboard-table {
+  width: 90%; /* Adjusted width to be relative to container */
+  margin: 20px auto; /* Center the table within the container */
+  border-collapse: collapse; /* Optional: for a more traditional table look */
+  color: #fff; /* Text color for leaderboard items */
+}
+
+.leaderboard-header, .leaderboard-row {
+  display: flex;
+  justify-content: space-between; /* Distribute items evenly */
+  padding: 10px 0; /* Add some padding */
+  border-bottom: 1px solid #555; /* Separator line */
+}
+
+.leaderboard-header {
+  font-weight: bold; /* Make header text bold */
+  color: #f0ad4e; /* A distinct color for the header */
+  border-bottom-width: 2px; /* Thicker line for header */
+}
+
+.leaderboard-header-item, .leaderboard-item {
+  flex-basis: 33%; /* Assign equal width to each column */
+  text-align: center; /* Center text within each column */
+}
+
+.leaderboard-row:last-child {
+  border-bottom: none; /* No border for the last row */
+}
+
+.leaderboard-row:hover {
+  background-color: #333; /* Highlight on hover - same as container bg for subtlety */
+}
   
-  .leaderboard-table {
-    width: 100%;
-    margin-top: 20px;
-  }
-  
-  .leaderboard-header {
-    display: flex;
-    justify-content: space-between;
-    background-color: #444;
-    padding: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #fff;
-    text-transform: uppercase;
-  }
-  
-  .leaderboard-header-item {
-    width: 30%;
-  }
-  
-  .leaderboard-row {
-    display: flex;
-    justify-content: space-between;
-    background-color: #555;
-    padding: 10px;
-    color: #fff;
-  }
-  
-  .leaderboard-item {
-    width: 30%;
-  }
-  
-  a {
-    display: block;
+  /* General link and button styles within leaderboard, if needed */
+  .leaderboard-container a {
+    display: inline-block; /* Changed from block to inline-block for better flow with buttons */
     margin-top: 30px;
     text-decoration: none; /* Remove underline */
   }
   
-  .menu-button {
+  .leaderboard-container .menu-button { /* Specificity for menu button inside leaderboard */
     background-color: #444;
     color: #fff;
     font-size: 18px;
@@ -173,11 +176,11 @@ body {
     cursor: pointer;
     text-transform: uppercase;
     transition: background-color 0.3s ease, transform 0.3s ease;
-    width: auto;
-    margin: 0 auto;
+    /* width: auto; removed to let inline-block size it or set a specific width if needed */
+    /* margin: 0 auto; not needed for inline-block if centered by parent */
   }
   
-  .menu-button:hover {
+  .leaderboard-container .menu-button:hover {
     background-color: #00ff00;
     color: #222;
     transform: scale(1.1);
